@@ -17,19 +17,21 @@ parry_sim <- function(
   if(missing(enemy_ab)){print("Give value for enemy_ab")}
   
   # this function sets up all possible enemy attack rolls
-  attack_rolls <- function(enemy_ab){
+  attack_rolls <- function(enemy_ab_val){
+    enemy_ab_val <- enemy_ab
     attacks <- c()
     for(i in 1:20) {
-      attacks <- append(attacks, seq(enemy_ab, enemy_ab-15, -5) + i)
+      attacks <- append(attacks, seq(enemy_ab_val, enemy_ab_val-15, -5) + i)
     }
     return(attacks)
   }
   
   # this function sets up all possible parry rolls
-  parry_rolls <- function(parry) {
+  parry_rolls <- function(parry_val) {
+    parry_val <- parry
     parries <- c()
     for(i in 1:20) {
-      parries <- append(parries, parry + i)
+      parries <- append(parries, parry_val + i)
     }
     return(parries)
   }
@@ -37,9 +39,9 @@ parry_sim <- function(
   # this calculates the mean of parry failing per round
   parry_fails <- parry_rolls() >= attack_rolls()
   if(epic_dodge == T) {
-    parry_fails[seq(40, length(parry_results), 20)] <- F # assigns nat20s for epic dodge
+    parry_fails[seq(40, length(parry_fails), 20)] <- F # assigns nat20s for epic dodge
   } else {
-    parry_fails[seq(20, length(parry_results), 20)] <- F # assigns nat20s for no epic dodge
+    parry_fails[seq(20, length(parry_fails), 20)] <- F # assigns nat20s for no epic dodge
   }
   chance_parry_fail <- length(parry_fails[parry_fails == F])/length(parry_fails)
   
