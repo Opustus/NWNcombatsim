@@ -1,5 +1,5 @@
 # This is a parry simulator! It currently works for 4 APR enemy only.
-# It calculates the chance of being hit per attack. I'll add the chance of riposte soon!
+# It calculates the chance of being hit per attack and the chance of riposte.
 
 parry_sim <- function(
   epic_dodge, #         accepts T or F, checks for player's epic dodge, default F
@@ -36,7 +36,7 @@ parry_sim <- function(
     return(parries)
   }
   
-  # this calculates the mean of parry failing per round
+  # this calculates the mean of parry failing per attack
   parry_fails <- parry_rolls() >= attack_rolls()
   if(epic_dodge == T) {
     parry_fails[seq(40, length(parry_fails), 20)] <- F # assigns nat20s for epic dodge
@@ -45,7 +45,7 @@ parry_sim <- function(
   }
   chance_parry_fail <- length(parry_fails[parry_fails == F])/length(parry_fails)
   
-  # this calculates the mean of AC failing per round
+  # this calculates the mean of AC failing per attack
   ac_fails <- ac  > attack_rolls()
   if(epic_dodge == T){
     ac_fails[seq(40, length(ac_fails), 20)] <- F # assigns nat20s for epic dodge
@@ -55,12 +55,17 @@ parry_sim <- function(
   chance_ac_fail <- length(ac_fails[ac_fails == F])/length(ac_fails)
   
   if (concealment == T){
-    # the chance of getting hit per round without concealment or epic dodge
+    # the chance of getting hit without concealment or epic dodge
     chance_hit <- chance_parry_fail * chance_ac_fail * 0.75
   } else {
     # the chance of getting hit with concealment and no epic dodge
     chance_hit <- chance_parry_fail * chance_ac_fail
   }
-
+  # outputs the chance of being hit with attack post conditions
   return(chance_hit)
 }
+
+##### FUNCTION ENDS HERE
+
+# an example of using the function
+parry_sim(parry=73, ac=58, enemy_ab=58, epic_dodge = F, concealment = T)
