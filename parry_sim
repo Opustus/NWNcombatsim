@@ -1,5 +1,5 @@
 # This is a parry simulator! It currently works for 4 APR enemy only.
-# It calculates the chance of being hit per round and the chance of riposte.
+# It calculates the chance of being hit per attack. I'll add the chance of riposte soon!
 
 parry_sim <- function(
   epic_dodge, #         accepts T or F, checks for player's epic dodge, default F
