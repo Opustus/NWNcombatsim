@@ -7,9 +7,35 @@ damage_poe <- function(n) {
   )
 }
 
+damage_poe2 <- function(n) {
+  sapply(
+    n,
+    function(x) sum(seq(0, by=5, length = x))
+  )
+}
+damage_poe2(1:10)
+
+damage_poe3 <- function(n) {
+  sapply(
+    n,
+    function(x) sum(seq(20, by=2, length = x))
+  )
+}
+damage_poe3(1:10)
+
+rounds = 1:15
+plot(rounds,damage_poe(rounds), type="b", col="red", ylim=c(0,700), ylab="damage", xaxt = "n")
+axis(1, at = rounds)
+lines(rounds,damage_poe2(rounds), type="b", col="green")
+lines(rounds,damage_poe3(rounds), type="b", col="blue")
+legend(2, 600, legend=c("20+5", "20+2", "0+5"), col=c("red","blue","green"), lty=1, cex=0.8)
+
+
+
 damage_bs <- function(n) {
    n*sum(seq(from=HP/2/10,to=HP/20))
 }
+
 
 sum(seq(from=HP/2/10,to=HP/20))
 
