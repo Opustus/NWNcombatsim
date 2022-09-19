@@ -15,20 +15,40 @@ damage_poe2 <- function(n) {
 }
 damage_poe2(1:10)
 
+
 damage_poe3 <- function(n) {
   sapply(
     n,
     function(x) sum(seq(20, by=2, length = x))
   )
 }
-damage_poe3(1:10)
+
+damage_poe4 <- function(n) {
+  sapply(
+    n,
+    function(x) sum(seq(5, by=5, length = x))
+  )
+}
+damage_poe4(1:5)
+damage_poe5 <- damage_poe4(1:5)
+for(i in 1:10){
+  dmg_out <- 75 + 25*i
+  damage_poe5 <- c(damage_poe5,dmg_out)
+}
+damage_poe5
+
+for(i in 1:10){
+  dmg_out = 75 + 25*i
+}
+
 
 rounds = 1:15
 plot(rounds,damage_poe(rounds), type="b", col="red", ylim=c(0,700), ylab="damage", xaxt = "n")
 axis(1, at = rounds)
 lines(rounds,damage_poe2(rounds), type="b", col="green")
 lines(rounds,damage_poe3(rounds), type="b", col="blue")
-legend(2, 600, legend=c("20+5", "20+2", "0+5"), col=c("red","blue","green"), lty=1, cex=0.8)
+lines(rounds, damage_poe5, type="b", col="black")
+legend(2, 600, legend=c("20+5", "20+2", "0+5", "5+5, cap 25"), col=c("red","blue","green", "black"), lty=1, cex=0.8)
 
 
 
