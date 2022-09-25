@@ -87,4 +87,71 @@ damage_rounds=data.frame(AoE, e16, e17, e18, e19, e20, e21, e22, e23, e24, e25, 
 matplot(rounds, damage_rounds, type="l", ylab="damage/round", xaxt="n")
 axis(1, rounds)
 legend(1, 380, legend=c("AoE stacking lv 16","long AoE+blast lv 16 thru 30"), lty=1, col=c("black","red"), cex=0.7)
-       
+
+
+
+## Damage modifiers
+cha10=c(4,	4,	6,	6,	6,	6,	6,	7,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10,	10)
+cha8=c(4,	4,	6,	6,	6,	6,	6,	7,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8,	8)
+cha2=rep(2,30)
+flat10=trunc(level/3)
+flat15=trunc(level/2)
+
+## cha10
+damage_cha10_min=1*level+cha10
+damage_cha10_min[21:30] <- damage_cha10_min[21:30]*1.25
+damage_cha10_min[6:30] <-  damage_cha10_min[6:30]*2
+damage_cha10_max=2*level+cha10
+damage_cha10_max[21:30] <- damage_cha10_max[21:30]*1.25
+damage_cha10_max[6:30] <-  damage_cha10_max[6:30]*2
+damage_cha10_average=(damage_cha10_min+damage_cha10_max)/2
+
+## cha8
+damage_cha8_min=1*level+cha8
+damage_cha8_min[21:30] <- damage_cha8_min[21:30]*1.25
+damage_cha8_min[6:30] <-  damage_cha8_min[6:30]*2
+damage_cha8_max=2*level+cha8
+damage_cha8_max[21:30] <- damage_cha8_max[21:30]*1.25
+damage_cha8_max[6:30] <-  damage_cha8_max[6:30]*2
+damage_cha8_average=(damage_cha8_min+damage_cha8_max)/2
+
+## cha2
+damage_cha2_min=1*level+cha2
+damage_cha2_min[21:30] <- damage_cha2_min[21:30]*1.25
+damage_cha2_min[6:30] <-  damage_cha2_min[6:30]*2
+damage_cha2_max=2*level+cha2
+damage_cha2_max[21:30] <- damage_cha2_max[21:30]*1.25
+damage_cha2_max[6:30] <-  damage_cha2_max[6:30]*2
+damage_cha2_average=(damage_cha2_min+damage_cha2_max)/2
+
+## flat10
+damage_flat10_min=1*level+flat10
+damage_flat10_min[21:30] <- damage_flat10_min[21:30]*1.25
+damage_flat10_min[6:30] <-  damage_flat10_min[6:30]*2
+damage_flat10_max=2*level+flat10
+damage_flat10_max[21:30] <- damage_flat10_max[21:30]*1.25
+damage_flat10_max[6:30] <-  damage_flat10_max[6:30]*2
+damage_flat10_average=(damage_flat10_min+damage_flat10_max)/2
+
+## flat15
+damage_flat15_min=1*level+flat15
+damage_flat15_min[21:30] <- damage_flat15_min[21:30]*1.25
+damage_flat15_min[6:30] <-  damage_flat15_min[6:30]*2
+damage_flat15_max=2*level+flat15
+damage_flat15_max[21:30] <- damage_flat15_max[21:30]*1.25
+damage_flat15_max[6:30] <-  damage_flat15_max[6:30]*2
+damage_flat15_average=(damage_flat15_min+damage_flat15_max)/2
+
+## matrix
+warlock_damages=data.frame(damage_new_average, damage_cha10_average, damage_cha8_average, damage_cha2_average, damage_flat15_average, damage_flat10_average)
+colnames(warlock_damages) <- c("Cha14", "Cha10", "Cha8", "Cha2", "Flat warlock / 2", "Flat warlock / 3")
+
+nn=ncol(warlock_damages)
+matplot(level,warlock_damages, type="l", ylab="dmg/round")
+legend(1, 150, colnames(warlock_damages),col=seq_len(nn),cex=0.8,fill=seq_len(nn))
+
+## some important levels
+barplot(as.matrix(warlock_damages[16,]), ylim=c(0,150), las=2, main="level 16")
+barplot(as.matrix(warlock_damages[21,]), ylim=c(0,150), las=2, main="level 21")
+barplot(as.matrix(warlock_damages[26,]), ylim=c(0,150), las=2, main="level 26")
+barplot(as.matrix(warlock_damages[30,]), ylim=c(0,150), las=2, main="level 30")
