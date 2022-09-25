@@ -35,15 +35,24 @@ damage_flat15_max=2*level+flat15
 damage_flat15_max[21:30] <- damage_flat15_max[21:30]*1.25
 damage_flat15_max[6:30] <-  damage_flat15_max[6:30]*2
 damage_flat15_average=(damage_flat15_min+damage_flat15_max)/2
+damage_flat15_both=cbind(damage_flat15_min,damage_flat15_max)
+damage_flat15_sd=apply(damage_flat15_both, 1, sd)
 
 ## Matrix old and flat15
 warlock_damages_new=data.frame(damage_flat15_average, damage_old_average)
 colnames(warlock_damages_new) <- c("1d6 per 2 warlock", "1d2 per 1 warlock + 1 per warlock / 2")
-matplot(level, warlock_damages_new, ylab="Average dmg per round", type="l", lty="solid", col=c("darkgreen","red"))
-legend(2, 160, legend=colnames(warlock_damages_new), lty=1, col=c("red","darkgreen"), cex=0.7)
+matplot(level, ylim=c(0,200), warlock_damages_new, ylab="Average dmg per round", xlab="Level", type="l", lty="solid", col=c("darkgreen","red"))
+legend(2, 190, legend=colnames(warlock_damages_new), lty=1, col=c("red","darkgreen"), cex=0.7)
+arrows(level,damage_old_average-damage_old_sd/2,level,damage_old_average+damage_old_sd/2, code=3, length=0.02, angle = 90, col="red")
+arrows(level,damage_flat15_average-damage_flat15_sd/2,level,damage_flat15_average+damage_flat15_sd/2, code=3, length=0.02, angle = 90, col="darkgreen")
 
-text(locator(10), c(43, 35), labels(c("X", "35")))
-as.character(warlock_damages_new[11,])
+plot(warlock_damages_new[,1], type="l", ylim=c(0,200), col="darkgreen", ylab="Average dmg per round", xlab="Level")
+legend(2,190, lty=1, legend="1d2 per 1 warlock + 1 per warlock / 2", col="darkgreen", cex=0.7)
+arrows(level,damage_flat15_average-damage_flat15_sd/2,level,damage_flat15_average+damage_flat15_sd/2, code=3, length=0.02, angle = 90, col="darkgreen")
+
+plot(warlock_damages_new[,2], type="l", ylim=c(0,200), col="red", ylab="Average dmg per round", xlab="Level")
+legend(2,190, lty=1, legend="1d6 per 2 warlock", col="red", cex=0.7)
+arrows(level,damage_old_average-damage_old_sd/2,level,damage_old_average+damage_old_sd/2, code=3, length=0.02, angle = 90, col="red")
 
 
 ## Plots
