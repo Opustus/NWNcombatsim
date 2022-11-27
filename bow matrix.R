@@ -1,8 +1,5 @@
-# Expected value of hits and damage for bow and crossbow!
-# Accounts for crits.
+# Expected value of damage per round for bow and crossbow!
 
-# Expected value formula and function
-# x = expected value of an attack with a certain range of hit probabilities
 roll20 = 1:20
 
 attacks = function(ab, apr, rapid){
