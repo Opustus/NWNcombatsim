@@ -1,0 +1,92 @@
+# Expected value of hits and damage for bow and crossbow!
+# Accounts for crits.
+
+# Expected value formula and function
+# x = expected value of an attack with a certain range of hit probabilities
+roll20 = 1:20
+
+attacks = function(ab, apr, rapid){
+  if (missing(rapid)){rapid = F}
+  if (rapid == T){
+    apr = apr + 1 
+    ab = ab - 2}
+  seq(from = ab, to = ab-apr*4, by = -5)
+}
+
+attacks_prob = function(ab, apr, rapid){
+  c1 <- cbind(attacks(ab, apr, rapid)[1]+roll20)
+  c2 <- cbind(attacks(ab, apr, rapid)[2]+roll20)
+  c3 <- cbind(attacks(ab, apr, rapid)[3]+roll20)
+  c4 <- cbind(attacks(ab, apr, rapid)[4]+roll20)
+  attacks_matrix = cbind(c1,c2,c3,c4)
+  if (rapid == T){
+    c5 <- cbind(attacks(ab, apr, rapid)[5]+roll20)
+    attacks_matrix = cbind(c1,c2,c3,c4,c5)
+    return(attacks_matrix)
+  }
+  return(attacks_matrix)
+}
+
+attacks_prob(50, 4, F)
+
+hits = function(ab, apr, rapid, ac){
+  hits_matrix = attacks_prob(ab, apr, rapid) - ac
+  hits_matrix[1,] <- -1
+  hits_matrix[20,] <- 1
+  hits = length(hits_matrix[hits_matrix >= 0])
+  return(hits)
+}
+hits(50, 4, F, 70)
+
+crits = function(ab, apr, rapid, ac, crit_range){
+  hits(ab,apr,rapid,ac) * crit_range
+}
+
+crits(50, 4, T, 50, 0.3)
+
+damage = function(ab, apr, rapid, ac, crit_range, crit_threat, damage){
+  crits = crits(ab, apr, rapid, ac, crit_range)
+  hits = hits(ab, apr, rapid, ac)
+  hits = hits - crits
+  hits_damage = hits * damage
+  crits_damage = crits * damage * crit_threat
+  damage = (hits_damage + crits_damage) / 20
+  return(damage)
+}
+
+crossbow_no_rapid = c()
+for(ac in 30:70){
+  out <- damage(50, 4, F, ac, 0.3, 2, 10)
+  crossbow_no_rapid <- c(crossbow_no_rapid, out)
+}
+crossbow_no_rapid
+
+crossbow_rapid = c()
+for(ac in 30:70){
+  out <- damage(50, 4, T, ac, 0.3, 2, 10)
+  crossbow_rapid <- c(crossbow_rapid, out)
+}
+
+bow_no_rapid = c()
+for(ac in 30:70){
+  out <- damage(50, 4, F, ac, 0.1, 3, 10)
+  bow_no_rapid <- c(bow_no_rapid, out)
+}
+crossbow_no_rapid
+
+bow_rapid = c()
+for(ac in 30:70){
+  out <- damage(50, 4, T, ac, 0.1, 3, 10)
+  bow_rapid <- c(bow_rapid, out)
+}
+
+
+bow_matrix = cbind(crossbow_no_rapid, crossbow_rapid, bow_no_rapid, bow_rapid)
+colnames(bow_matrix) <- c("Crossbow, no rapid", "Crossbow, rapid", "Bow, no rapid", "Bow, rapid")
+
+
+matplot(bow_matrix,  type="l", lwd = 3.0, ylab = "Dmg/round, AB 50", xlab = "Enemy AC", xaxt='n')
+axis(side=1, at = 0:40, 30:70)
+nn <- ncol(bow_matrix)
+legend("top", colnames(bow_matrix),col=seq_len(nn),cex=0.8,fill=seq_len(nn))
+
