@@ -25,7 +25,6 @@ attacks_prob = function(ab, apr, rapid){
   return(attacks_matrix)
 }
 
-attacks_prob(50, 4, T)
 
 hits = function(ab, apr, rapid, ac){
   hits_matrix = attacks_prob(ab, apr, rapid) - ac
@@ -34,13 +33,10 @@ hits = function(ab, apr, rapid, ac){
   hits = length(hits_matrix[hits_matrix >= 0])
   return(hits)
 }
-hits(50, 4, T, 70)
 
 crits = function(ab, apr, rapid, ac, crit_range){
   hits(ab,apr,rapid,ac) * crit_range
 }
-
-crits(50, 4, T, 50, 0.3)
 
 damage = function(ab, apr, rapid, ac, crit_range, crit_threat, damage){
   crits = crits(ab, apr, rapid, ac, crit_range)
@@ -57,7 +53,6 @@ for(ac in 30:70){
   out <- damage(50, 4, F, ac, 0.3, 2, 10)
   crossbow_no_rapid <- c(crossbow_no_rapid, out)
 }
-crossbow_no_rapid
 
 crossbow_rapid = c()
 for(ac in 30:70){
@@ -70,7 +65,6 @@ for(ac in 30:70){
   out <- damage(50, 4, F, ac, 0.1, 3, 10)
   bow_no_rapid <- c(bow_no_rapid, out)
 }
-crossbow_no_rapid
 
 bow_rapid = c()
 for(ac in 30:70){
