@@ -6,9 +6,7 @@
 roll20 = 1:20
 
 attacks = function(ab, apr, rapid){
-  if (missing(rapid)){rapid = F}
   if (rapid == T){
-    apr = apr + 1 
     ab = ab - 2}
   seq(from = ab, to = ab-apr*4, by = -5)
 }
@@ -21,13 +19,13 @@ attacks_prob = function(ab, apr, rapid){
   attacks_matrix = cbind(c1,c2,c3,c4)
   if (rapid == T){
     c5 <- cbind(attacks(ab, apr, rapid)[5]+roll20)
-    attacks_matrix = cbind(c1,c2,c3,c4,c5)
+    attacks_matrix = cbind(c1,c1,c2,c3,c4)
     return(attacks_matrix)
   }
   return(attacks_matrix)
 }
 
-attacks_prob(50, 4, F)
+attacks_prob(50, 4, T)
 
 hits = function(ab, apr, rapid, ac){
   hits_matrix = attacks_prob(ab, apr, rapid) - ac
@@ -36,7 +34,7 @@ hits = function(ab, apr, rapid, ac){
   hits = length(hits_matrix[hits_matrix >= 0])
   return(hits)
 }
-hits(50, 4, F, 70)
+hits(50, 4, T, 70)
 
 crits = function(ab, apr, rapid, ac, crit_range){
   hits(ab,apr,rapid,ac) * crit_range
@@ -88,5 +86,5 @@ colnames(bow_matrix) <- c("Crossbow, no rapid", "Crossbow, rapid", "Bow, no rapi
 matplot(bow_matrix,  type="l", lwd = 3.0, ylab = "Dmg/round, AB 50", xlab = "Enemy AC", xaxt='n')
 axis(side=1, at = 0:40, 30:70)
 nn <- ncol(bow_matrix)
-legend("top", colnames(bow_matrix),col=seq_len(nn),cex=0.8,fill=seq_len(nn))
+legend("topright", colnames(bow_matrix),col=seq_len(nn),cex=0.8,fill=seq_len(nn))
 
