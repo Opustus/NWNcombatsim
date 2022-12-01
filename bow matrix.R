@@ -79,3 +79,36 @@ axis(side=1, at = 0:40, 30:70)
 nn <- ncol(bow_matrix)
 legend("topright", colnames(bow_matrix),col=seq_len(nn),cex=0.8,fill=seq_len(nn))
 
+# NEW GRAPH
+
+bow_no_rapid = c()
+for(ac in 30:70){
+  out <- damage(50, 4, F, ac, 0.1, 3, 16.5)
+  bow_no_rapid <- c(bow_no_rapid, out)
+}
+
+bow_rapid = c()
+for(ac in 30:70){
+  out <- damage(50, 4, T, ac, 0.1, 3, 16.5)
+  bow_rapid <- c(bow_rapid, out)
+}
+
+axe_no_rapid = c()
+for(ac in 30:70){
+  out <- damage(50, 4, F, ac, 0.15, 2, 19)
+  axe_no_rapid <- c(axe_no_rapid, out)
+}
+
+axe_rapid = c()
+for(ac in 30:70){
+  out <- damage(50, 4, T, ac, 0.15, 2, 19)
+  axe_rapid <- c(axe_rapid, out)
+}
+
+throw_matrix = cbind(axe_no_rapid, axe_rapid, bow_no_rapid, bow_rapid)
+colnames(bow_matrix) <- c("Axe, no rapid", "Axe, rapid", "Bow, no rapid", "Bow, rapid")
+
+matplot(throw_matrix,  type="l", lwd = 3.0, ylab = "Dmg/round, AB 50", xlab = "Enemy AC", xaxt='n')
+axis(side=1, at = 0:40, 30:70)
+nn <- ncol(bow_matrix)
+legend("topright", colnames(bow_matrix),col=seq_len(nn),fill=seq_len(nn))
