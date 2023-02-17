@@ -16,10 +16,10 @@ damage_old_average=(damage_old_min+damage_old_max)/2
 ## New with CHA
 cha_mod=c(4,	4,	6,	6,	6,	6,	6,	7,	11,	11,	11,	11,	11,	11,	11,	12,	12,	12,	12,	12,	12,	12,	13,	13,	13,	13,	13,	14,	14,	14)
 damage_new_min=1*level+cha_mod
-damage_new_min[21:30] <- damage_new_min[21:30]*1.25
+damage_new_min[25:30] <- damage_new_min[25:30]*1.25
 damage_new_min[6:30] <-  damage_new_min[6:30]*2
 damage_new_max=2*level+cha_mod
-damage_new_max[21:30] <- damage_new_max[21:30]*1.25
+damage_new_max[25:30] <- damage_new_max[25:30]*1.25
 damage_new_max[6:30] <-  damage_new_max[6:30]*2
 damage_new_both=cbind(damage_new_min,damage_new_max)
 damage_new_sd=apply(damage_new_both, 1, sd)
@@ -29,10 +29,10 @@ damage_new_average=(damage_new_min+damage_new_max)/2
 flat15=trunc(level/2)
 
 damage_flat15_min=1*level+flat15
-damage_flat15_min[21:30] <- damage_flat15_min[21:30]*1.25
+damage_flat15_min[25:30] <- damage_flat15_min[25:30]*1.25
 damage_flat15_min[6:30] <-  damage_flat15_min[6:30]*2
 damage_flat15_max=2*level+flat15
-damage_flat15_max[21:30] <- damage_flat15_max[21:30]*1.25
+damage_flat15_max[25:30] <- damage_flat15_max[25:30]*1.25
 damage_flat15_max[6:30] <-  damage_flat15_max[6:30]*2
 damage_flat15_average=(damage_flat15_min+damage_flat15_max)/2
 damage_flat15_both=cbind(damage_flat15_min,damage_flat15_max)
@@ -41,17 +41,17 @@ damage_flat15_sd=apply(damage_flat15_both, 1, sd)
 ## Matrix old and flat15
 warlock_damages_new=data.frame(damage_flat15_average, damage_old_average)
 colnames(warlock_damages_new) <- c("1d6 per 2 warlock", "1d2 per 1 warlock + 1 per warlock / 2")
-matplot(level, ylim=c(0,200), warlock_damages_new, ylab="Average dmg per round", xlab="Level", type="l", lty="solid", col=c("darkgreen","red"))
-legend(2, 190, legend=colnames(warlock_damages_new), lty=1, col=c("red","darkgreen"), cex=0.7)
+matplot(level, ylim=c(0,200), warlock_damages_new, ylab="Average dmg per round", xlab="Level", type="l", lty="solid", col=c("darkgreen","red"), lwd=2.0)
+legend(2, 190, legend=colnames(warlock_damages_new), lty=1, col=c("red","darkgreen"), cex=1)
 arrows(level,damage_old_average-damage_old_sd/2,level,damage_old_average+damage_old_sd/2, code=3, length=0.02, angle = 90, col="red")
 arrows(level,damage_flat15_average-damage_flat15_sd/2,level,damage_flat15_average+damage_flat15_sd/2, code=3, length=0.02, angle = 90, col="darkgreen")
 
-plot(warlock_damages_new[,1], type="l", ylim=c(0,200), col="darkgreen", ylab="Average dmg per round", xlab="Level")
-legend(2,190, lty=1, legend="1d2 per 1 warlock + 1 per warlock / 2", col="darkgreen", cex=0.7)
+plot(warlock_damages_new[,1], type="l", ylim=c(0,200), col="darkgreen", ylab="Average dmg per round", xlab="Level", lwd=2.0)
+legend(2,190, lty=1, legend="1d2 per 1 warlock + 1 per warlock / 2", col="darkgreen", cex=1)
 arrows(level,damage_flat15_average-damage_flat15_sd/2,level,damage_flat15_average+damage_flat15_sd/2, code=3, length=0.02, angle = 90, col="darkgreen")
 
-plot(warlock_damages_new[,2], type="l", ylim=c(0,200), col="red", ylab="Average dmg per round", xlab="Level")
-legend(2,190, lty=1, legend="1d6 per 2 warlock", col="red", cex=0.7)
+plot(warlock_damages_new[,2], type="l", ylim=c(0,200), col="red", ylab="Average dmg per round", xlab="Level", lwd=2.0)
+legend(2,190, lty=1, legend="1d6 per 2 warlock", col="red", cex=1)
 arrows(level,damage_old_average-damage_old_sd/2,level,damage_old_average+damage_old_sd/2, code=3, length=0.02, angle = 90, col="red")
 
 
