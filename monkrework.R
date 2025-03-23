@@ -77,22 +77,22 @@ damage_to_ac_range = function(ab, base_apr, ubab, haste, flurry, crit_range, cri
   ac_range70to80 = c()
   for (enemy_ac in 40:50)
   {
-    out <- damage(50, 5, ubab = T, haste = T, flurry = T, enemy_ac, 0.15, 2, 50, 3.5)
+    out <- damage(ab, base_apr, ubab, haste, flurry, enemy_ac, crit_range, crit_threat, dmg_per_hit, sneak_per_hit)
     ac_range40to50 <- c(ac_range40to50, out)
   }
   for (enemy_ac in 50:60)
   {
-    out <- damage(50, 5, ubab = T, haste = T, flurry = T, enemy_ac, 0.15, 2, 50, 3.5)
+    out <- damage(ab, base_apr, ubab, haste, flurry, enemy_ac, crit_range, crit_threat, dmg_per_hit, sneak_per_hit)
     ac_range50to60 <- c(ac_range50to60, out)
   }
   for (enemy_ac in 60:70)
   {
-    out <- damage(50, 5, ubab = T, haste = T, flurry = T, enemy_ac, 0.15, 2, 50, 3.5)
+    out <- damage(ab, base_apr, ubab, haste, flurry, enemy_ac, crit_range, crit_threat, dmg_per_hit, sneak_per_hit)
     ac_range60to70 <- c(ac_range60to70, out)
   }
   for (enemy_ac in 70:80)
   {
-    out <- damage(50, 5, ubab = T, haste = T, flurry = T, enemy_ac, 0.15, 2, 50, 3.5)
+    out <- damage(ab, base_apr, ubab, haste, flurry, enemy_ac, crit_range, crit_threat, dmg_per_hit, sneak_per_hit)
     ac_range70to80 <- c(ac_range70to80, out)
   }
   
@@ -101,5 +101,163 @@ damage_to_ac_range = function(ab, base_apr, ubab, haste, flurry, crit_range, cri
   
   return (mean_damage_by_ac_range)
 }
-damage_to_ac_range(50, 5, ubab = T, haste = T, flurry = T, 0.15, 2, 50, 3.5)
+Monk30WisFlurry = damage_to_ac_range(ab = 46,
+                                     base_apr = 5, 
+                                     ubab = T,
+                                     haste = T, 
+                                     flurry = T, 
+                                     crit_range = 0.15, 
+                                     crit_threat = 2, 
+                                     dmg_per_hit = 39.5, 
+                                     sneak_per_hit = 0)
 
+Monk30Wis = damage_to_ac_range(ab = 46,
+                               base_apr = 5, 
+                               ubab = T,
+                               haste = T, 
+                               flurry = F, 
+                               crit_range = 0.15, 
+                               crit_threat = 2, 
+                               dmg_per_hit = 39.5, 
+                               sneak_per_hit = 0)
+
+Monk30StrFlurry = damage_to_ac_range(ab = 48,
+                                     base_apr = 5, 
+                                     ubab = T,
+                                     haste = T, 
+                                     flurry = T, 
+                                     crit_range = 0.15, 
+                                     crit_threat = 2, 
+                                     dmg_per_hit = 58, 
+                                     sneak_per_hit = 0)
+
+Monk30Str = damage_to_ac_range(ab = 48,
+                               base_apr = 5, 
+                               ubab = T,
+                               haste = T, 
+                               flurry = F, 
+                               crit_range = 0.15, 
+                               crit_threat = 2, 
+                               dmg_per_hit = 58, 
+                               sneak_per_hit = 0)
+
+Monk25SD5Flurry = damage_to_ac_range(ab = 45,
+                                      base_apr = 5, 
+                                      ubab = T,
+                                      haste = T, 
+                                      flurry = T, 
+                                      crit_range = 0.15, 
+                                      crit_threat = 2, 
+                                      dmg_per_hit = 37.5, 
+                                      sneak_per_hit = 0)
+
+Monk25SD5 = damage_to_ac_range(ab = 45,
+                              base_apr = 5, 
+                              ubab = T,
+                              haste = T, 
+                              flurry = F, 
+                              crit_range = 0.15, 
+                              crit_threat = 2, 
+                              dmg_per_hit = 37.5, 
+                              sneak_per_hit = 0)
+
+
+Monk20SD5POE5Flurry = damage_to_ac_range(ab = 45,
+                                         base_apr = 5, 
+                                         ubab = T,
+                                         haste = T, 
+                                         flurry = T, 
+                                         crit_range = 0.15, 
+                                         crit_threat = 2, 
+                                         dmg_per_hit = 43, 
+                                         sneak_per_hit = 0)
+
+Monk20SD5POE5 = damage_to_ac_range(ab = 45,
+                                   base_apr = 5, 
+                                   ubab = T,
+                                   haste = T, 
+                                   flurry = F, 
+                                   crit_range = 0.15, 
+                                   crit_threat = 2, 
+                                   dmg_per_hit = 43, 
+                                   sneak_per_hit = 0)
+
+Monk25Cav5Flurry = damage_to_ac_range(ab = 50,
+                                     base_apr = 6, 
+                                     ubab = T,
+                                     haste = T, 
+                                     flurry = T, 
+                                     crit_range = 0.15, 
+                                     crit_threat = 2, 
+                                     dmg_per_hit = 58, 
+                                     sneak_per_hit = 0)
+
+Monk25Cav5 = damage_to_ac_range(ab = 50,
+                               base_apr = 6, 
+                               ubab = T,
+                               haste = T, 
+                               flurry = F, 
+                               crit_range = 0.15, 
+                               crit_threat = 2, 
+                               dmg_per_hit = 58, 
+                               sneak_per_hit = 0)
+
+Monk25Fighter5Flurry = damage_to_ac_range(ab = 48,
+                                     base_apr = 6, 
+                                     ubab = T,
+                                     haste = T, 
+                                     flurry = T, 
+                                     crit_range = 0.15, 
+                                     crit_threat = 2, 
+                                     dmg_per_hit = 62, 
+                                     sneak_per_hit = 0)
+
+Monk25Fighter5 = damage_to_ac_range(ab = 48,
+                               base_apr = 6, 
+                               ubab = T,
+                               haste = T, 
+                               flurry = F, 
+                               crit_range = 0.15, 
+                               crit_threat = 2, 
+                               dmg_per_hit = 62, 
+                               sneak_per_hit = 0)
+
+Monk19Fighter4WM7 = damage_to_ac_range(ab = 49,
+                                    base_apr = 4, 
+                                    ubab = F,
+                                    haste = T, 
+                                    flurry = F, 
+                                    crit_range = 0.4, 
+                                    crit_threat = 3, 
+                                    dmg_per_hit = 62, 
+                                    sneak_per_hit = 0)
+
+Monk18Cav5WM7 = damage_to_ac_range(ab = 51,
+                                    base_apr = 4, 
+                                    ubab = F,
+                                    haste = T, 
+                                    flurry = F, 
+                                    crit_range = 0.4, 
+                                    crit_threat = 2, 
+                                    dmg_per_hit = 62, 
+                                    sneak_per_hit = 0)
+
+Monk19Fighter4WM7STAFF = damage_to_ac_range(ab = 49,
+                                       base_apr = 6, 
+                                       ubab = T,
+                                       haste = T, 
+                                       flurry = T, 
+                                       crit_range = 0.25, 
+                                       crit_threat = 3, 
+                                       dmg_per_hit = 60, 
+                                       sneak_per_hit = 0)
+
+Monk18Cav5WM7STAFF = damage_to_ac_range(ab = 51,
+                                   base_apr = 6, 
+                                   ubab = T,
+                                   haste = T, 
+                                   flurry = T, 
+                                   crit_range = 0.25, 
+                                   crit_threat = 3, 
+                                   dmg_per_hit = 58, 
+                                   sneak_per_hit = 0)
