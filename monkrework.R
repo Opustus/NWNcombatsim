@@ -121,15 +121,16 @@ Monk30Wis = damage_to_ac_range(ab = 46,
                                dmg_per_hit = 39.5, 
                                sneak_per_hit = 0)
 
-Monk30StrFlurry = damage_to_ac_range(ab = 48,
+Monk30StrNo2Hand = damage_to_ac_range(ab = 46,
                                      base_apr = 5, 
                                      ubab = T,
                                      haste = T, 
                                      flurry = T, 
                                      crit_range = 0.15, 
                                      crit_threat = 2, 
-                                     dmg_per_hit = 58, 
+                                     dmg_per_hit = 51, 
                                      sneak_per_hit = 0)
+
 
 Monk30Str = damage_to_ac_range(ab = 48,
                                base_apr = 5, 
@@ -261,3 +262,13 @@ Monk18Cav5WM7STAFF = damage_to_ac_range(ab = 51,
                                    crit_threat = 3, 
                                    dmg_per_hit = 58, 
                                    sneak_per_hit = 0)
+
+Monk18Cav5WM7STAFF = damage_to_ac_range(ab = 49,
+                                        base_apr = 6, 
+                                        ubab = T,
+                                        haste = T, 
+                                        flurry = T, 
+                                        crit_range = 0.25, 
+                                        crit_threat = 3, 
+                                        dmg_per_hit = 51, 
+                                        sneak_per_hit = 0)
