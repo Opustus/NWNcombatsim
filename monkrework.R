@@ -1,4 +1,3 @@
-
 roll20 <- 1:20
 
 attacks <- function(ab, base_apr, ubab = TRUE) {
