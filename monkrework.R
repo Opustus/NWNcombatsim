@@ -65,83 +65,40 @@ damage_to_ac_range <- function(ab, base_apr, ubab, haste, flurry, crit_range, cr
   return(as.data.frame(t(mean_damages)))
 }
 
+library(googlesheets4)
+library(dplyr)
 
-monk_30_wis_flurry <- damage_to_ac_range(
-  ab = 46, base_apr = 5, ubab = TRUE, haste = TRUE, flurry = TRUE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 39.5, sneak_per_hit = 0
-)
+gs4_auth()
 
-monk_30_wis <- damage_to_ac_range(
-  ab = 46, base_apr = 5, ubab = TRUE, haste = TRUE, flurry = FALSE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 39.5, sneak_per_hit = 0
-)
+sheet_url <- "https://docs.google.com/spreadsheets/d/1zmUBmbZUbCmm5DpKoAuexaD1uU5RUFVDxE1-vwREUnY"
 
-monk_30_str_no_2hand <- damage_to_ac_range(
-  ab = 46, base_apr = 5, ubab = TRUE, haste = TRUE, flurry = TRUE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 51, sneak_per_hit = 0
-)
+builds <- read_sheet(sheet_url, sheet = "Builds")
 
-monk_30_str <- damage_to_ac_range(
-  ab = 48, base_apr = 5, ubab = TRUE, haste = TRUE, flurry = FALSE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 58, sneak_per_hit = 0
-)
+# Compute damage for each build
+results <- lapply(1:nrow(builds), function(i) {
+  row <- builds[i, ]
+  damage_df <- damage_to_ac_range(
+    ab = row$ab,
+    base_apr = row$base_apr,
+    ubab = as.logical(row$ubab),
+    haste = as.logical(row$haste),
+    flurry = as.logical(row$flurry),
+    crit_range = row$crit_range,
+    crit_threat = row$crit_threat,
+    dmg_per_hit = row$dmg_per_hit,
+    sneak_per_hit = row$sneak_per_hit
+  )
+  return(as.numeric(damage_df[1, ]))
+})
 
-monk_25_sd5_flurry <- damage_to_ac_range(
-  ab = 45, base_apr = 5, ubab = TRUE, haste = TRUE, flurry = TRUE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 37.5, sneak_per_hit = 0
-)
+damage_matrix <- do.call(rbind, results)
+colnames(damage_matrix) <- c("vs_AC_40_50", "vs_AC_50_60", "vs_AC_60_70", "vs_AC_70_80")
 
-monk_25_sd5 <- damage_to_ac_range(
-  ab = 45, base_apr = 5, ubab = TRUE, haste = TRUE, flurry = FALSE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 37.5, sneak_per_hit = 0
-)
-
-monk_20_sd5_poe5_flurry <- damage_to_ac_range(
-  ab = 45, base_apr = 5, ubab = TRUE, haste = TRUE, flurry = TRUE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 43, sneak_per_hit = 0
-)
-
-monk_20_sd5_poe5 <- damage_to_ac_range(
-  ab = 45, base_apr = 5, ubab = TRUE, haste = TRUE, flurry = FALSE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 43, sneak_per_hit = 0
-)
-
-monk_25_cav5_flurry <- damage_to_ac_range(
-  ab = 50, base_apr = 6, ubab = TRUE, haste = TRUE, flurry = TRUE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 58, sneak_per_hit = 0
-)
-
-monk_25_cav5 <- damage_to_ac_range(
-  ab = 50, base_apr = 6, ubab = TRUE, haste = TRUE, flurry = FALSE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 58, sneak_per_hit = 0
-)
-
-monk_25_fighter5_flurry <- damage_to_ac_range(
-  ab = 48, base_apr = 6, ubab = TRUE, haste = TRUE, flurry = TRUE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 62, sneak_per_hit = 0
-)
-
-monk_25_fighter5 <- damage_to_ac_range(
-  ab = 48, base_apr = 6, ubab = TRUE, haste = TRUE, flurry = FALSE,
-  crit_range = 0.15, crit_threat = 2, dmg_per_hit = 62, sneak_per_hit = 0
-)
-
-monk_19_fighter4_wm7 <- damage_to_ac_range(
-  ab = 49, base_apr = 4, ubab = FALSE, haste = TRUE, flurry = FALSE,
-  crit_range = 0.4, crit_threat = 3, dmg_per_hit = 62, sneak_per_hit = 0
-)
-
-monk_18_cav5_wm7 <- damage_to_ac_range(
-  ab = 51, base_apr = 4, ubab = FALSE, haste = TRUE, flurry = FALSE,
-  crit_range = 0.4, crit_threat = 2, dmg_per_hit = 62, sneak_per_hit = 0
-)
-
-monk_19_fighter4_wm7_staff <- damage_to_ac_range(
-  ab = 49, base_apr = 6, ubab = TRUE, haste = TRUE, flurry = TRUE,
-  crit_range = 0.25, crit_threat = 3, dmg_per_hit = 60, sneak_per_hit = 0
-)
-
-monk_18_cav5_wm7_staff <- damage_to_ac_range(
-  ab = 51, base_apr = 6, ubab = TRUE, haste = TRUE, flurry = TRUE,
-  crit_range = 0.25, crit_threat = 3, dmg_per_hit = 58, sneak_per_hit = 0
+# Write only the result columns back to the same sheet
+range_write(
+  ss = sheet_url,
+  data = as.data.frame(damage_matrix),
+  sheet = "Builds",
+  range = "K2",
+  col_names = FALSE
 )
