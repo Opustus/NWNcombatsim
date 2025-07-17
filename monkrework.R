@@ -93,6 +93,7 @@ results <- lapply(1:nrow(builds), function(i) {
   )
   return(as.numeric(damage_df[1, ]))
 })
+results <- lapply(results, round)
 
 damage_matrix <- do.call(rbind, results)
 colnames(damage_matrix) <- c("vs_AC_40_50", "vs_AC_50_60", "vs_AC_60_70", "vs_AC_70_80")
