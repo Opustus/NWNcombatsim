@@ -27,15 +27,20 @@ attacks_df <- function(ab, base_apr, ubab = FALSE, haste = TRUE, flurry = FALSE)
 }
 
 hits <- function(ab, base_apr, ubab, haste, flurry, enemy_ac) {
-  hits_matrix <- attacks_df(ab, base_apr, ubab, haste, flurry) - enemy_ac
-  hits_matrix[1, ] <- -1
-  hits_matrix[20, ] <- 1
-  hits <- length(hits_matrix[hits_matrix >= 0])
+  hit_rolls <- attacks_df(ab, base_apr, ubab, haste, flurry) - enemy_ac
+  hit_rolls[1, ] <- -1
+  hit_rolls[20, ] <- 1
+  hits <- length(hit_rolls[hit_rolls >= 0])
   return(hits)
 }
 
 crits <- function(ab, base_apr, ubab, haste, flurry, enemy_ac, crit_range) {
-  hits(ab, base_apr, ubab, haste, flurry, enemy_ac) * crit_range
+  crit_rolls <- attacks_df(ab, base_apr, ubab, haste, flurry) - enemy_ac
+  crits <- crit_rolls[crit_range:20, ]
+  crits <- length(crits[crits >= 0])
+  crit_chance <- crits/(length(crit_rolls)*nrow(crit_rolls))
+  crits <- hits(ab, base_apr, ubab, haste, flurry, enemy_ac) * crit_chance
+  return(crits)
 }
 
 damage <- function(ab, base_apr, ubab, haste, flurry, enemy_ac, crit_range, crit_threat, dmg_per_hit, sneak_per_hit) {
@@ -73,7 +78,6 @@ sheet_url <- "https://docs.google.com/spreadsheets/d/1zmUBmbZUbCmm5DpKoAuexaD1uU
 
 builds <- read_sheet(sheet_url, sheet = "Builds")
 
-# Compute damage for each build
 results <- lapply(1:nrow(builds), function(i) {
   row <- builds[i, ]
   damage_df <- damage_to_ac_range(
@@ -93,7 +97,6 @@ results <- lapply(1:nrow(builds), function(i) {
 damage_matrix <- do.call(rbind, results)
 colnames(damage_matrix) <- c("vs_AC_40_50", "vs_AC_50_60", "vs_AC_60_70", "vs_AC_70_80")
 
-# Write only the result columns back to the same sheet
 range_write(
   ss = sheet_url,
   data = as.data.frame(damage_matrix),
