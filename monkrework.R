@@ -10,16 +10,18 @@ attacks <- function(ab, base_apr, ubab = TRUE) {
 attacks_df <- function(ab, base_apr, ubab = FALSE, haste = TRUE, flurry = FALSE, dualwield = FALSE) {
   df <- data.frame("1" = roll20)
   
+  attack_values <- attacks(ab, base_apr, ubab)
+  
   for (i in 1:base_apr) {
     df[, i] <- attacks(ab, base_apr, ubab)[i] + roll20
   }
   
   if (haste) {
-    df$haste <- attacks(ab, base_apr, ubab)[1] + roll20
+    df$haste <- attack_values[length(attack_values)] + roll20 - 5
   }
   
   if (flurry) {
-    df$flurry <- attacks(ab, base_apr, ubab)[1] + roll20
+    df$flurry <- attack_values[length(attack_values)] + roll20 - 5
     df <- df - 2
   }
   
@@ -31,8 +33,6 @@ attacks_df <- function(ab, base_apr, ubab = FALSE, haste = TRUE, flurry = FALSE,
   
   return(df)
 }
-
-attacks_df(50, 4, FALSE, TRUE, FALSE, TRUE)
 
 hits <- function(ab, base_apr, ubab, haste, flurry, dualwield, enemy_ac) {
   hit_rolls <- attacks_df(ab, base_apr, ubab, haste, flurry, dualwield) - enemy_ac
