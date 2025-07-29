@@ -16,12 +16,14 @@ attacks_df <- function(ab, base_apr, ubab = FALSE, haste = TRUE, flurry = FALSE,
     df[, i] <- attacks(ab, base_apr, ubab)[i] + roll20
   }
   
+  attack_decrement <- if (ubab) 3 else 5
+  
   if (haste) {
-    df$haste <- attack_values[length(attack_values)] + roll20 - 5
+    df$haste <- attack_values[length(attack_values)] + roll20 - attack_decrement
   }
   
   if (flurry) {
-    df$flurry <- attack_values[length(attack_values)] + roll20 - 5
+    df$flurry <- attack_values[length(attack_values)] + roll20 - attack_decrement
     df <- df - 2
   }
   
