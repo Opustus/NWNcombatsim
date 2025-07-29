@@ -7,7 +7,7 @@ attacks <- function(ab, base_apr, ubab = TRUE) {
   seq(from = first_attack_ab, to = last_attack_ab, by = attack_decrement)
 }
 
-attacks_df <- function(ab, base_apr, ubab = FALSE, haste = TRUE, flurry = FALSE, dualwield = FALSE) {
+attacks_df <- function(ab, base_apr, ubab = FALSE, haste = TRUE, flurry = FALSE, dualwield = FALSE, ferocity = FALSE) {
   df <- data.frame("1" = roll20)
   
   attack_values <- attacks(ab, base_apr, ubab)
@@ -33,36 +33,40 @@ attacks_df <- function(ab, base_apr, ubab = FALSE, haste = TRUE, flurry = FALSE,
     df <- df - 2
   }
   
+  if (ferocity) {
+    df$ferocity <- attacks(ab, base_apr, ubab)[1] + roll20
+  }
+  
   return(df)
 }
 
-hits <- function(ab, base_apr, ubab, haste, flurry, dualwield, enemy_ac) {
-  hit_rolls <- attacks_df(ab, base_apr, ubab, haste, flurry, dualwield) - enemy_ac
+hits <- function(ab, base_apr, ubab, haste, flurry, dualwield, ferocity, enemy_ac) {
+  hit_rolls <- attacks_df(ab, base_apr, ubab, haste, flurry, dualwield, ferocity) - enemy_ac
   hit_rolls[1, ] <- -1
   hit_rolls[20, ] <- 1
   hits <- length(hit_rolls[hit_rolls >= 0])
   return(hits)
 }
 
-crits <- function(ab, base_apr, ubab, haste, flurry, dualwield, enemy_ac, crit_range) {
-  crit_rolls <- attacks_df(ab, base_apr, ubab, haste, flurry, dualwield) - enemy_ac
+crits <- function(ab, base_apr, ubab, haste, flurry, dualwield, ferocity, enemy_ac, crit_range) {
+  crit_rolls <- attacks_df(ab, base_apr, ubab, haste, flurry, dualwield, ferocity) - enemy_ac
   crits <- crit_rolls[crit_range:20, ]
   crits <- length(crits[crits >= 0])
   crit_chance <- crits/(length(crit_rolls)*nrow(crit_rolls))
-  crits <- hits(ab, base_apr, ubab, haste, flurry, dualwield, enemy_ac) * crit_chance
+  crits <- hits(ab, base_apr, ubab, haste, flurry, dualwield, ferocity, enemy_ac) * crit_chance
   return(crits)
 }
 
-damage <- function(ab, base_apr, ubab, haste, flurry, dualwield, enemy_ac, crit_range, crit_threat, dmg_per_hit, sneak_per_hit) {
-  crits_val <- crits(ab, base_apr, ubab, haste, flurry, dualwield, enemy_ac, crit_range)
-  hits_val <- hits(ab, base_apr, ubab, haste, flurry, dualwield, enemy_ac) - crits_val
+damage <- function(ab, base_apr, ubab, haste, flurry, dualwield, ferocity, enemy_ac, crit_range, crit_threat, dmg_per_hit, sneak_per_hit) {
+  crits_val <- crits(ab, base_apr, ubab, haste, flurry, dualwield, ferocity, enemy_ac, crit_range)
+  hits_val <- hits(ab, base_apr, ubab, haste, flurry, dualwield, ferocity, enemy_ac) - crits_val
   hits_damage <- hits_val * (dmg_per_hit + sneak_per_hit)
   crits_damage <- dmg_per_hit * crits_val * crit_threat
   total_damage <- (hits_damage + crits_damage) / 20
   return(total_damage)
 }
 
-damage_to_ac_range <- function(ab, base_apr, ubab, haste, flurry, dualwield, crit_range, crit_threat, dmg_per_hit, sneak_per_hit) {
+damage_to_ac_range <- function(ab, base_apr, ubab, haste, flurry, dualwield, ferocity, crit_range, crit_threat, dmg_per_hit, sneak_per_hit) {
   ac_ranges <- list(
     "vs AC 40 to 50" = 40:50,
     "vs AC 50 to 60" = 50:60,
@@ -72,7 +76,7 @@ damage_to_ac_range <- function(ab, base_apr, ubab, haste, flurry, dualwield, cri
   
   mean_damages <- sapply(ac_ranges, function(ac_range) {
     sapply(ac_range, function(enemy_ac) {
-      damage(ab, base_apr, ubab, haste, flurry, dualwield, enemy_ac, crit_range, crit_threat, dmg_per_hit, sneak_per_hit)
+      damage(ab, base_apr, ubab, haste, flurry, dualwield, ferocity, enemy_ac, crit_range, crit_threat, dmg_per_hit, sneak_per_hit)
     }) |> mean()
   })
   
@@ -97,6 +101,7 @@ results <- lapply(1:nrow(builds), function(i) {
     haste = as.logical(row$haste),
     flurry = as.logical(row$flurry),
     dualwield = as.logical(row$dualwield),
+    ferocity = as.logical(row$ferocity),
     crit_range = row$crit_range,
     crit_threat = row$crit_threat,
     dmg_per_hit = row$dmg_per_hit,
@@ -113,6 +118,6 @@ range_write(
   ss = sheet_url,
   data = as.data.frame(damage_matrix),
   sheet = "Builds",
-  range = "L2",
+  range = "M2",
   col_names = FALSE
 )
